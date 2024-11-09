@@ -12,8 +12,24 @@ const objeto1 = {
 const objeto2 = {
     nombre: "objeto 2",
     valor: 13
-}
+};
 
 const objeto3 = {
-    
+    nombre: "objeto 3",
+    valor: 8
+};
+
+array = [objeto1, objeto2, objeto3];
+
+function sumaValores(arr){
+    let arr2 = [];
+    for (let obj of arr){
+        arr2.push(obj.valor);
+    }
+    console.log(arr2);
+    let suma = arr2.reduce((acc, num) => acc+num, 0);
+    return suma;
 }
+
+console.log(objeto1, objeto2, objeto3);
+console.log(`La suma de los valores de los objetos anteriores es de: ${sumaValores(array)}`);
