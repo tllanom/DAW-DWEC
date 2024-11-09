@@ -1,0 +1,25 @@
+<!-- 
+8. Manipulación del DOM
+Crea una página HTML con un botón y un campo de texto. Escribe un script que, al hacer clic en el botón, cambie el valor del campo de texto.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 8</title>
+</head>
+<body>
+    <button id="boton">Cambiar texto</button>
+
+    <p id="texto">Texto original!</p>
+
+
+    <script>
+        document.getElementById("boton").onclick = function () {
+
+            document.getElementById("texto").innerText = "Texto cambiado!";
+        };
+    </script>
+</body>
+</html>
