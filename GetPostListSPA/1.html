@@ -4,23 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de tareas</title>
+    <link rel="stylesheet" href="1.css">
 </head>
 <body>
-    <h2>Tareas: </h2>
-    <ul id="texto"></ul>
 
-    <div id="formulario">
-        <form id="form">
-            <label for="masTareas">New task: </label>
-            <input type="text" id="masTareas" placeholder="Introduce your task here" required>
+    <button id="subir">Top</button>
+    <button id="bajar">Down(form)</button>
 
-            <label for="checkbox">
-                <input type="checkbox" id="checkbox">
-                Has it been completed?
-            </label>
-            <br>
-            <input type="submit" value="Send">
-        </form>
+    <div class="body2">
+        <h2>To dos: </h2>
+
+        <ul id="texto"></ul>
+
+        <div id="formulario">
+            <form id="form">
+                <label for="masTareas">New task: </label>
+                <input type="text" id="masTareas" placeholder="Introduce your task here" required>
+
+                <label for="checkbox">
+                    <input type="checkbox" id="checkbox">
+                    Has it been completed?
+                </label>
+                <br>
+                <input type="submit" value="Send">
+            </form>
+        </div>
     </div>
 
     <script src="1.js"></script>

@@ -20,6 +20,24 @@ Los datos a enviar serán:
 Después de enviar la tarea, muestra la tarea añadida en la página de forma dinámica.
 */
 
+const subir = document.getElementById("subir");
+const bajar = document.getElementById("bajar");
+
+subir.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0
+    });
+});
+
+
+bajar.addEventListener("click", () => {
+    window.scrollTo({
+        top: document.body.scrollHeight
+    });
+});
+
+
+
 async function tareas(){
     try{
         let datos = await fetch("https://jsonplaceholder.typicode.com/todos");
@@ -35,7 +53,7 @@ async function tareas(){
                 texto.appendChild(itemTarea);
             })
         } else{
-            console.log("Ha ocurrido un error.");
+            console.log("An error has occurred.");
         }
     } catch(error) {
         console.log("Error: ", error);
@@ -51,17 +69,17 @@ async function anadirTareas(titulo, completado){
             },
             body: JSON.stringify({
                 title: titulo,
-                completed: completado
+                completed: completado //no marcado 'completed: false' ya que, por mucho que sea una nueva tarea, puede estar ya hecha pero querido ser documentada
             }),
         });
         
         if (datos.ok){
             let nuevaTarea = await datos.json();
             mostrarNuevaTarea(nuevaTarea);
-            alert(`title '${nuevaTarea.title}'\nwith a/n ${nuevaTarea.completed ? "completed" : "incompleted"} status\nhas been added to the task list!`);
+            alert(`title '${nuevaTarea.title}'\nwith '${nuevaTarea.completed ? "completed" : "incompleted"}' status\nhas been added to the task list!`);
             console.log(nuevaTarea);
         } else {
-            console.log("Ha ocurrido un error.");
+            console.log("An error has occurred.");
         }
     } catch(error) {
         console.log("Error: ", error);
@@ -89,8 +107,5 @@ form.addEventListener("submit", function(event){
     document.getElementById("masTareas").value = "";
     document.getElementById("checkbox").checked = false;
 })
-
-//tareas()
-//    .then((datos) => anadirTareas(datos))
 
 tareas();
