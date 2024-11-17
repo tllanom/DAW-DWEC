@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto Entrenamientos</title>
+    <link rel="stylesheet" href="reto.css">
+</head>
+<body>
+    <div class="body2">
+        <h2>Training Management</h2>
+        
+        <div id="options">
+            <p>Menu</p>
+            <button onclick="showSections('inicio')">Welcome!</button>
+            <button onclick="showSections('signup')">Sign up</button>
+            <button onclick="showSections('signin')">Sign in</button>
+            <button onclick="showSections('forum')">Forum</button>
+        </div>
+
+        <div id="inicio" class="section">
+            <h2>Welcome to your personalized training management!</h2>
+            <p>This web page has been designed for you to be able to track your training sessions, store and compare their data!<br><br>                
+                You will firstly need to sign up and log in in order to be able to access your data. If not, you can always comment on our forum section!<br>
+                Welcome abroad, feel free to scroll through all you can find within!
+            </p>
+        </div>
+
+        <div id="signup" class="section">
+            <h2>Sign up</h2>
+
+            <form id="form">
+                <label for="name">Nombre*: </label>
+                <input type="text" id="text" placeholder="Nombre Apellidos" required>
+                <span class="error" id="errorName"></span>
+
+                <label for="mail">Mail*: </label>
+                <input type="email" id="mail" placeholder="name@mail.net" required>
+                <span class="error" id="errorMail"></span>
+
+                <label for="heigth">Height(cm)*: </label>
+                <input type="number" id="height" placeholder="total cm" required>
+                <span class="error" id="errorHeight"></span>
+
+                <label for="weight">Weight(kg)*: </label>
+                <input type="number" id="weigth" placeholder="total kg" required>
+                <span class="error" id="errorWeight"></span>
+
+                <label for="user">User*: </label>
+                <input type="text" id="user" placeholder="user123" required>
+                <span class="error" id="errorUser"></span>
+
+                <label for="pass">Password*: </label>
+                <input type="password" id="pass" placeholder="password" required>
+                <span class="error" id="errorPass"></span>
+
+                <label for="pass2">Repeat password*: </label>
+                <input type="password" id="pass2" placeholder="password" required>
+                <span class="error" id="errorPass2"></span>
+
+                <label for="checkbox">
+                    <input type="checkbox" id="checkbox" required>
+                    Terms and conditions*
+                </label>
+                <span class="error" id="errorCheckbox"></span>
+
+                <input type="submit" value="Sign up">
+            </form>
+        </div>
+
+        <div id="signin" class="section">
+            <h2>Sign in</h2>
+            <form id="loginForm">
+                <label for="loginUser">User: </label>
+                <input type="text" id="loginUser" placeholder="user123" required>
+
+                <label for="loginPass">Password: </label>
+                <input type="password" id="loginPass" placeholder="password" required>
+
+                <input type="submit" value="Sign in">
+
+                <span class="error" id="errorLogin"></span>
+            </form>
+        </div>
+
+        <div id="forum" class="section">
+            <h2>Forum</h2>
+            <textarea id="posts" placeholder="Write a post"></textarea>
+            <input type="submit" value="Send">
+            <p id="forumText"></p>
+        </div>
+
+    </div>
+
+    <script src="reto.js"></script>
+</body>
+</html>
