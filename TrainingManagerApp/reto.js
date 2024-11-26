@@ -23,14 +23,13 @@ class Entrenamiento {
     }
 }
 
-//section hide
+//section hide main menu
 function showSections(sectionId){
     document.querySelectorAll('.section').forEach(section => {
         section.classList.add('hidden');
     });
     document.getElementById(sectionId).classList.remove('hidden');
 }
-
 window.onload = () => {
     showSections('inicio');
 };
@@ -41,7 +40,7 @@ form.addEventListener("submit", function(event) {
     event.preventDefault();
     let valid = true;
 
-
+//shortening of element creation bringing HTML to JS
     function traerElementos(id){
         return document.getElementById(id);
     }
@@ -65,6 +64,7 @@ form.addEventListener("submit", function(event) {
     const errorPass2 = traerElementos("errorPass2");
     const errorCheckbox = traerElementos("errorCheckbox");
 
+    //shortening of span class error creation
     function returnError(condition, error, message) {
         if(condition) {
             error.textContent = message;
@@ -101,7 +101,7 @@ form.addEventListener("submit", function(event) {
 
     returnError(!checkbox.checked, errorCheckbox, "Terms and conditions must be accepted.");
 
-
+//user creation
     if(valid){
 
         const newUser = new Persona(
@@ -136,11 +136,11 @@ loginForm.addEventListener("submit", function(event) {
 
     const loginUser = traerElementos("loginUser");
     const loginPass = traerElementos("loginPass");
-
     const errorLogin = traerElementos("errorLogin");
 
-    const users = JSON.parse(localStorage.getItem("users"));
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     const existingUser = users.find((userr) => userr.user === loginUser.value.trim() && userr.pass === loginPass.value.trim());
+    
     if(!existingUser){
         errorLogin.textContent = "User and password combination is not recognized."
         valid = false
@@ -148,8 +148,50 @@ loginForm.addEventListener("submit", function(event) {
         errorLogin.textContent = "";
     }
 
+    //if signin valid, save loggedUser within localStorage to keep its session open
     if(valid){
-        alert(`You have logged in!`);
-    document.getElementById("loginForm").reset();
+        alert(`Welcome ${existingUser.user}, you have logged in!`);
+        localStorage.setItem("loggedUser", JSON.stringify(existingUser));
+        document.getElementById("loginForm").reset();
+
+        document.getElementById("options").classList.add("hidden");
+        document.getElementById("loggedMenu").classList.remove("hidden");
+
+        showSections("loggedMenu");
     }
 });
+
+//section hide menu once logged
+function showSections2(sectionId){
+    document.querySelectorAll('.section2').forEach(section2 => {
+        section2.classList.add('hidden');
+    });
+    document.getElementById(sectionId).classList.remove('hidden');
+};
+
+//logging out section 
+function logout() {
+    localStorage.removeItem("loggedUser");
+    alert(`Goodbye, you are signing out!`);
+    document.querySelectorAll('.section2').forEach(section2 => {
+        section2.classList.add('hidden');
+    });
+    document.getElementById("options").classList.remove("hidden");
+    document.getElementById("loggedMenu").classList.add("hidden");
+    showSections("inicio");
+};
+
+//if loggedUser is saved within localStorage, after refreshing, keep the session
+window.onload = () => {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+    if (loggedUser) {
+        document.getElementById("options").classList.add("hidden");
+        document.getElementById("loggedMenu").classList.remove("hidden");
+        showSections("loggedMenu");
+    } else {
+        document.getElementById("options").classList.remove("hidden");
+        document.getElementById("loggedMenu").classList.add("hidden");
+        showSections("inicio");
+    }
+}

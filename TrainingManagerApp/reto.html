@@ -91,6 +91,30 @@
             <p id="forumText"></p>
         </div>
 
+        <div id="loggedMenu" class="section hidden">
+            <p>Menu</p>
+            <button onclick="showSections2('add')">Add Training</button>
+            <button onclick="showSections2('show')">Show Training</button>
+            <button onclick="showSections2('best')">Best training</button>
+            <button onclick="showSections2('summary')">Summary</button>
+            <button onclick="showSections2('delete')">Delete training</button>
+            <button onclick="showSections2('forum')">Forum</button>
+            <button onclick="logout()">Log out</button>
+        </div>
+
+        <div id="add" class="section2 hidden">
+            <p>Add training</p>
+            <label for="distance">Distance(km)*: </label>
+            <input type="number" id="distance" placeholder="kilometers" required>
+            <span class="error" id="errorDistance"></span>
+
+            <label for="duration">Duration(min)*: </label>
+            <input type="number" id="duration" placeholder="minutes" required>
+            <span class="error" id="errorDuration"></span>
+
+            <input type="submit" value="Save Training">
+        </div>
+
     </div>
 
     <script src="reto.js"></script>
