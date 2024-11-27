@@ -16,9 +16,9 @@ class Persona {
 
 
 class Entrenamiento {
-    constructor(distance, min, date) {
+    constructor(distance, duration) {
         this.distance = distance;
-        this.min = min;
+        this.duration = duration;
         this.date = new Date();
     }
 }
@@ -195,3 +195,52 @@ window.onload = () => {
         showSections("inicio");
     }
 }
+
+//adding training form
+//(it does not show a page, that would be done with prompt-sync)
+const addingForm = document.getElementById("addingForm");
+addingForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    let valid = true;
+
+    const distance = document.getElementById("distance");
+    const duration = document.getElementById("duration");
+    const errorDistance = document.getElementById("errorDistance");
+    const errorDuration = document.getElementById("errorDuration");
+
+    if(distance.value <= 0){
+        errorDistance.textContent = "A positive distance must be registered!";
+        valid = false;
+    } else {
+        errorDistance.textContent = "";
+    }
+
+    if(duration.value <= 0){
+        errorDuration.textContent = "A positive duration must be registered!";
+        valid = false;
+    } else {
+        errorDuration.textContent = "";
+    }
+
+    if(valid){
+        const newTraining = new Entrenamiento(
+            distance.value,
+            duration.value,
+        );
+
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        loggedUser.entrenamientos.push(newTraining);
+        localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+
+//saves loggedUser data within users array
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const userIndex = users.findIndex(user => user.user === loggedUser.user);
+        if (userIndex !== -1) {
+            users[userIndex] = loggedUser;
+            localStorage.setItem("users", JSON.stringify(users));
+        };
+
+        alert(`New training added succesfully!`);
+        document.getElementById("addingForm").reset();
+    }
+});
