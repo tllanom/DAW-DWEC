@@ -95,24 +95,47 @@
             <p>Menu</p>
             <button onclick="showSections2('add')">Add Training</button>
             <button onclick="showSections2('show')">Show Training</button>
-            <button onclick="showSections2('best')">Best training</button>
+            <button onclick="showSections2('best')">Best Training</button>
             <button onclick="showSections2('summary')">Summary</button>
-            <button onclick="showSections2('delete')">Delete training</button>
+            <button onclick="showSections2('delete')">Delete Training</button>
             <button onclick="showSections2('forum')">Forum</button>
             <button onclick="logout()">Log out</button>
         </div>
 
         <div id="add" class="section2 hidden">
             <p>Add training</p>
-            <label for="distance">Distance(km)*: </label>
-            <input type="number" id="distance" placeholder="kilometers" required>
-            <span class="error" id="errorDistance"></span>
+            <form id="addingForm">
+                <label for="distance">Distance(km)*: </label>
+                <input type="number" id="distance" placeholder="kilometers" required>
+                <span class="error" id="errorDistance"></span>
 
-            <label for="duration">Duration(min)*: </label>
-            <input type="number" id="duration" placeholder="minutes" required>
-            <span class="error" id="errorDuration"></span>
+                <label for="duration">Duration(min)*: </label>
+                <input type="number" id="duration" placeholder="minutes" required>
+                <span class="error" id="errorDuration"></span>
 
-            <input type="submit" value="Save Training">
+                <input type="submit" value="Save Training">
+            </form>
+        </div>
+
+        <div id="show" class="section2 hidden">
+            <p>Show all trainings</p>
+            <ul id="list"></ul>
+        </div>
+
+        <div id="best" class="section2 hidden">
+            <p>Best trainings</p>
+            <button id="tiempo">Mejor tiempo</button>
+            <button id="distancia">Mejor distancia</button>
+            <button id="velocidad">Mejor velocidad</button>
+        </div>
+
+        <div id="summary" class="section2 hidden">
+            <p>Training data summary</p>
+        </div>
+
+        <div id="delete" class="section2 hidden">
+            <p>Deletion of trainings</p>
+            <ul id="list"></ul>
         </div>
 
     </div>
