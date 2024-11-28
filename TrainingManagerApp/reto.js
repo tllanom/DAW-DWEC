@@ -244,3 +244,17 @@ addingForm.addEventListener("submit", function(event) {
         document.getElementById("addingForm").reset();
     }
 });
+
+//showing trainings
+const list = document.getElementById("list");
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+const li = document.createElement("li");
+list.innerHTML = "";
+
+if (loggedUser.entrenamientos.length > 0){
+    loggedUser.entrenamientos.forEach((entren, index) => {
+        li.textContent = 
+    }))
+} else {
+
+}
