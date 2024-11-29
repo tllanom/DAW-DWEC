@@ -106,11 +106,11 @@
         <div id="add" class="section2 hidden">
             <h3>Add training</h3>
             <form id="addingForm">
-                <label for="distance">Distance(km)*: </label>
-                <input type="number" id="distance" placeholder="kilometers" required>
+                <label for="distance">Distance (m)*: </label>
+                <input type="number" id="distance" placeholder="meters" required>
                 <span class="error" id="errorDistance"></span>
 
-                <label for="duration">Duration(min)*: </label>
+                <label for="duration">Duration (min)*: </label>
                 <input type="number" id="duration" placeholder="minutes" required>
                 <span class="error" id="errorDuration"></span>
 
@@ -120,7 +120,19 @@
 
         <div id="show" class="section2 hidden">
             <h3>Show all trainings</h3>
-            <ul id="list"></ul>
+            <table id="list" border="1">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Distance (m)</th>
+                        <th>Duration (min)</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
 
         <div id="best" class="section2 hidden">

@@ -228,6 +228,7 @@ addingForm.addEventListener("submit", function(event) {
             duration.value,
         );
 
+
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         loggedUser.entrenamientos.push(newTraining);
         localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
@@ -246,15 +247,28 @@ addingForm.addEventListener("submit", function(event) {
 });
 
 //showing trainings
-const list = document.getElementById("list");
+const list = document.getElementById("list").querySelector("tbody");
 const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-const li = document.createElement("li");
 list.innerHTML = "";
 
 if (loggedUser.entrenamientos.length > 0){
     loggedUser.entrenamientos.forEach((entren, index) => {
-        li.textContent = 
-    }))
-} else {
+        const row = document.createElement("tr");
 
-}
+        row.innerHTML= `
+            <td>${index + 1}</td>
+            <td>${entren.distance}</td>
+            <td>${entren.duration}</td>
+            <td>${new Date(entren.date).toLocaleString()}</td>
+        `;
+
+        list.appendChild(row);
+
+    });
+} else {
+    const noRow = document.createElement("tr");
+    noRow.innerHTML= `
+        <td colspan="4">No trainings registered!</td>`;
+
+    list.appendChild(noRow);
+};
