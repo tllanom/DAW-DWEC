@@ -20,7 +20,12 @@ class Entrenamiento {
         this.distance = distance;
         this.duration = duration;
         this.date = new Date();
-    }
+        this.comments = [];
+    };
+
+    addComment(comment) {
+        this.comments.push(comment);
+    };
 }
 
 //section hide main menu
@@ -158,6 +163,7 @@ loginForm.addEventListener("submit", function(event) {
         document.getElementById("loggedMenu").classList.remove("hidden");
 
         showSections("loggedMenu");
+        renderTrainings();
     }
 });
 
@@ -189,6 +195,7 @@ window.onload = () => {
         document.getElementById("options").classList.add("hidden");
         document.getElementById("loggedMenu").classList.remove("hidden");
         showSections("loggedMenu");
+        renderTrainings();
     } else {
         document.getElementById("options").classList.remove("hidden");
         document.getElementById("loggedMenu").classList.add("hidden");
@@ -228,47 +235,118 @@ addingForm.addEventListener("submit", function(event) {
             duration.value,
         );
 
-
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         loggedUser.entrenamientos.push(newTraining);
         localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
 
-//saves loggedUser data within users array
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const userIndex = users.findIndex(user => user.user === loggedUser.user);
-        if (userIndex !== -1) {
-            users[userIndex] = loggedUser;
-            localStorage.setItem("users", JSON.stringify(users));
-        };
+        saveLoggedUser();
 
         alert(`New training added succesfully!`);
         document.getElementById("addingForm").reset();
+
+        renderTrainings();
     }
 });
 
-//showing trainings
-const list = document.getElementById("list").querySelector("tbody");
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-list.innerHTML = "";
+//function to load loggedUser's data from localStorage:
+/*
+function loadLoggedUser() {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    return loggedUser ? loggedUser : null;
+};
+*/
 
-if (loggedUser.entrenamientos.length > 0){
-    loggedUser.entrenamientos.forEach((entren, index) => {
-        const row = document.createElement("tr");
+//function to save loggedUser's data in localStorage:
+function saveLoggedUser() {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-        row.innerHTML= `
-            <td>${index + 1}</td>
-            <td>${entren.distance}</td>
-            <td>${entren.duration}</td>
-            <td>${new Date(entren.date).toLocaleString()}</td>
-        `;
+    //saves loggedUser data within users array
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userIndex = users.findIndex(user => user.user === loggedUser.user);
+    if (userIndex !== -1) {
+        users[userIndex] = loggedUser;
+        localStorage.setItem("users", JSON.stringify(users));
+    };
+};
 
-        list.appendChild(row);
 
-    });
-} else {
-    const noRow = document.createElement("tr");
-    noRow.innerHTML= `
-        <td colspan="4">No trainings registered!</td>`;
 
-    list.appendChild(noRow);
+//function to render trainings:
+function renderTrainings() {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    const trainings = loggedUser.entrenamientos;
+    const trainingList = document.getElementById("training-list");
+
+    trainingList.innerHTML = ""; // Clear the table
+
+    if (trainings.length > 0) {
+        trainings.forEach((training, index) => {
+            // Ensure that comments array exists
+            const comments = training.comments || [];
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${training.distance}</td>
+                <td>${training.duration}</td>
+                <td>${new Date(training.date).toLocaleString()}</td>
+                <td>
+                    <ul id="comment-list-${index}">
+                        ${comments.map(comment => `<li>${comment}</li>`).join("")}
+                    </ul>
+                </td>
+                <td>
+                    <textarea id="comment-input-${index}" placeholder="Write something here!"></textarea>
+                    <button onclick="addComment(${index})">Add Comment</button>
+                    <button onclick="deleteLastComment(${index})">Delete Last Comment</button>
+                </td>
+            `;
+            trainingList.appendChild(row);
+        });
+    } else {
+        trainingList.innerHTML = `<tr><td colspan="6">No trainings registered!</td></tr>`;
+    }
+};
+
+
+//function to add a comment:
+function addComment(trainingIndex) {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    
+/*
+    if (!loggedUser || !loggedUser.entrenamientos || !loggedUser.entrenamientos[trainingIndex]) {
+        console.error("Training session or comments array is missing.");
+        return;
+    }
+*/
+
+    const commentInput = document.getElementById(`comment-input-${trainingIndex}`);
+    const comment = commentInput.value.trim();
+    
+
+    if (comment) {
+        if (!loggedUser.entrenamientos[trainingIndex].comments) {
+            loggedUser.entrenamientos[trainingIndex].comments = [];
+        }
+
+        loggedUser.entrenamientos[trainingIndex].comments.push(comment);
+        localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+
+        renderTrainings();
+        saveLoggedUser()
+    } else {
+        alert("Please enter a valid comment!");
+    }
+};
+
+//function to delete a comment;
+function deleteLastComment(trainingIndex) {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    const training = loggedUser.entrenamientos[trainingIndex];
+    if (training.comments.length > 0) {
+        training.comments.pop();
+        localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+        renderTrainings();
+        saveLoggedUser()
+    }
 };
