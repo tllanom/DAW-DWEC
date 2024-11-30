@@ -139,10 +139,27 @@
 
         <div id="best" class="section2 hidden">
             <h3>Best trainings</h3>
-            <button id="tiempo">Mejor tiempo</button>
-            <button id="distancia">Mejor distancia</button>
-            <button id="velocidad">Mejor velocidad</button>
+            <button onclick="showSections3('tiempo')">Best time</button>
+            <button onclick="showSections3('distancia')">Best distance</button>
+            <button onclick="showSections3('velocidad')">Best velocity</button>
         </div>
+
+        <div id="tiempo" class="section3 hidden">
+            <h4>Your longest-timed run has been:</h4>
+            <p id="tiempoBest"></p>
+        </div>
+
+        <div id="distancia" class="section3 hidden">
+            <h4>Your longest-distanced run has been:</h4>
+            <p id="distanciaBest"></p>
+        </div>
+
+        <div id="velocidad" class="section3 hidden">
+            <h4>Your fastest run has been:</h4>
+            <p id="velocidadBest"></p>
+        </div>
+
+
 
         <div id="summary" class="section2 hidden">
             <h3>Training data summary</h3>
