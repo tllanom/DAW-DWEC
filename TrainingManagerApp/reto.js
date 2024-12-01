@@ -202,6 +202,14 @@ window.onload = () => {
         document.getElementById("loggedMenu").classList.remove("hidden");
         showSections("loggedMenu");
         renderTrainings();
+        renderBestTrainings();
+        //update localStorage when reloading the page
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentUser = JSON.parse(localStorage.getItem("loggedUser"));
+            if (currentUser) {
+                localStorage.setItem("loggedUser", JSON.stringify(currentUser));
+            }
+        });
     } else {
         document.getElementById("options").classList.remove("hidden");
         document.getElementById("loggedMenu").classList.add("hidden");
@@ -251,6 +259,7 @@ addingForm.addEventListener("submit", function(event) {
         document.getElementById("addingForm").reset();
 
         renderTrainings();
+        renderBestTrainings();
     }
 });
 
@@ -375,6 +384,7 @@ function renderBestTrainings(){
         document.getElementById("distanciaBest").innerHTML = "<p>No trainings available.</p>";
         document.getElementById("velocidadBest").innerHTML = "<p>No trainings available.</p>";
         document.getElementById("summaryText").innerHTML = "<p>No trainings available.</p>";
+        document.getElementById("delete").innerHTML = "<h3>Deletion of trainings</h3><p>No trainings available.</p>";
         return;
     }
 
@@ -490,6 +500,40 @@ function renderBestTrainings(){
                     <td>${kachow}</td>
                 </tr>
             </tbody>
-        </table>`
+        </table>
+    `
 
+//delete training section
+    const trainings = loggedUser.entrenamientos;
+    const deletionList = document.getElementById("deletion-list");
+
+    deletionList.innerHTML = "";
+
+    if (trainings.length > 0) {
+        trainings.forEach((training, index) => {
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${training.distance}</td>
+                <td>${training.duration}</td>
+                <td>${new Date(training.date).toLocaleString()}</td>
+                <td>
+                    <button onClick="deleteTraining(${index})">Delete Training ${index + 1}</button>
+                </td>
+            `;
+            deletionList.appendChild(row);
+        });
+    } else {
+        deletionList.innerHTML = `<tr><td colspan="5">No trainings registered!</td></tr>`;
+    };
+}
+
+//function to delete trainings
+function deleteTraining(id) {
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    loggedUser.entrenamientos.splice(id, 1);
+    localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+    alert(`Training ${id + 1} deleted succesfully!`);
+    renderBestTrainings();
 }
