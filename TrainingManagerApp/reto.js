@@ -168,6 +168,57 @@ loginForm.addEventListener("submit", function(event) {
     }
 });
 
+
+//forum section
+//inicializar la zona de comentarios
+function initializeForum(){
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    renderForumPosts(storedPosts);
+};
+
+//traer los comentarios guardados en localStorage
+function renderForumPosts(comments){
+    const postList = document.getElementById("postList");
+    postList.innerHTML = "";
+
+    if (comments.length > 0){
+        comments.forEach(comment => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <p><b>${comment.user}</b> - ${new Date(comment.date).toLocaleString()}:</p>
+                <p>${comment.text}</p>
+            `;
+            postList.appendChild(li);
+        });
+    } else {
+        postList.innerHTML = `<p>No comments yet!</p>`
+    };
+};
+
+const forumForm = document.getElementById("forumForm");
+forumForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const posts = document.getElementById("posts");
+    const text = posts.value.trim();
+
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser")) || {user: "unknown"};
+    const newPost = {
+        user: loggedUser.user,
+        text: text,
+        date: new Date()
+    };
+
+    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    storedPosts.push(newPost);
+    localStorage.setItem("posts", JSON.stringify(storedPosts));
+
+    posts.value = "";
+    renderForumPosts(storedPosts);
+    alert("Post has been succesfully added!");
+});
+
+
 //section hide menu once logged
 function showSections2(sectionId){
     document.querySelectorAll('.section2').forEach(section2 => {
@@ -195,6 +246,7 @@ function logout() {
 
 //if loggedUser is saved within localStorage, after refreshing, keep the session
 window.onload = () => {
+    initializeForum();
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
     if (loggedUser) {

@@ -86,9 +86,14 @@
 
         <div id="forum" class="section">
             <h2>Forum</h2>
-            <textarea id="posts" placeholder="Write a post"></textarea>
-            <input type="submit" value="Send">
-            <p id="forumText"></p>
+            <form id="forumForm">
+                <textarea id="posts" placeholder="Write a post"></textarea>
+                <button type="submit">Submit</button>    
+            </form>
+            <div id="forumPosts">
+                <h3>Posts:</h3>
+                <ul id="postList"></ul>
+            </div>
         </div>
 
         <!--menu & sections once signed in(training sections)-->
@@ -99,7 +104,7 @@
             <button onclick="showSections2('best')">Best Training</button>
             <button onclick="showSections2('summary')">Summary</button>
             <button onclick="showSections2('delete')">Delete Training</button>
-            <button onclick="showSections2('forum2')">Forum</button>
+            <button onclick="showSections2('forum')">Forum</button>
             <button onclick="logout()">Log out</button>
         </div>
 
@@ -182,13 +187,6 @@
 
                 </tbody>
             </table>
-        </div>
-
-        <div id="forum2" class="section2 hidden">
-            <h3>Forum</h3>
-            <textarea id="posts" placeholder="Write a post"></textarea>
-            <input type="submit" value="Send">
-            <p id="forumText"></p>
         </div>
     </div>
 
