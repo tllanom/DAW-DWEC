@@ -164,6 +164,7 @@ loginForm.addEventListener("submit", function(event) {
 
         showSections("loggedMenu");
         renderTrainings();
+        renderBestTrainings();
     }
 });
 
@@ -184,6 +185,8 @@ function logout() {
     alert(`Goodbye, you are signing out!`);
     document.querySelectorAll('.section2').forEach(section2 => {
         section2.classList.add('hidden');
+        document.querySelectorAll('.section3').forEach(section3 => {
+            section3.classList.add('hidden')});
     });
     document.getElementById("options").classList.remove("hidden");
     document.getElementById("loggedMenu").classList.add("hidden");
@@ -356,6 +359,7 @@ function deleteLastComment(trainingIndex) {
 function showSections3(sectionId){
     document.querySelectorAll('.section3').forEach(section3 => {
         section3.classList.add('hidden');
+        renderTrainings()
     });
     document.getElementById(sectionId).classList.remove('hidden');
 };
@@ -363,97 +367,129 @@ function showSections3(sectionId){
 
 //BestTrainings section
 //mejor tiempo
-renderTrainings();
-const tiempoBest = document.getElementById("tiempoBest");
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-let bestTimed = loggedUser.entrenamientos.reduce((max, value, index) => {
-    if (value.duration > max.duration) {
-        return {...value, id: index};
-    }
-    return max;
-}, { duration: 0 }); 
-tiempoBest.innerHTML = `
-<p>#${(bestTimed.id + 1)}. Where you have run for ${bestTimed.duration} minutes!</p>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Distance (m)</th>
-                <th>Duration (min)</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>${bestTimed.id + 1}</td>
-                <td>${bestTimed.distance}</td>
-                <td>${bestTimed.duration}</td>
-                <td>${new Date(bestTimed.date).toLocaleString()}</td>
-            </tr>
-        </tbody>
-    </table>
-`
+function renderBestTrainings(){
+    const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-//mejor distancia
-renderTrainings();
-const distanciaBest = document.getElementById("distanciaBest");
-let bestDistanced = loggedUser.entrenamientos.reduce((max, value, index) => {
-    if (value.distance > max.distance) {
-        return {...value, id: index};
+    if (!loggedUser || !loggedUser.entrenamientos || loggedUser.entrenamientos.length === 0) {
+        document.getElementById("tiempoBest").innerHTML = "<p>No trainings available.</p>";
+        document.getElementById("distanciaBest").innerHTML = "<p>No trainings available.</p>";
+        document.getElementById("velocidadBest").innerHTML = "<p>No trainings available.</p>";
+        document.getElementById("summaryText").innerHTML = "<p>No trainings available.</p>";
+        return;
     }
-    return max;
-}, { distance: 0 }); 
-distanciaBest.innerHTML = `
-<p>#${(bestDistanced.id + 1)}. Where you have run for ${bestDistanced.distance} meters!</p>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Distance (m)</th>
-                <th>Duration (min)</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>${bestDistanced.id + 1}</td>
-                <td>${bestDistanced.distance}</td>
-                <td>${bestDistanced.duration}</td>
-                <td>${new Date(bestDistanced.date).toLocaleString()}</td>
-            </tr>
-        </tbody>
-    </table>
-`
 
-//mejor velocidad
-renderTrainings();
-const velocidadBest = document.getElementById("velocidadBest");
-let bestVelocity = loggedUser.entrenamientos.reduce((max, value, index) => {
-    if ((value.distance/value.duration) > (max.distance/max.duration)) {
-        return {...value, id: index};
-    }
-    return max;
-}); 
-velocidadBest.innerHTML = `
-<p>#${(bestVelocity.id + 1)}. Where you have run for ${bestVelocity.distance} meters in ${bestVelocity.duration} minutes; a velocity of ${((bestVelocity.distance/1000)/(bestVelocity.duration/60)).toFixed(2)}km/h!</p>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Distance (m)</th>
-                <th>Duration (min)</th>
-                <th>Velocity (km/h)</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>${bestVelocity.id + 1}</td>
-                <td>${bestVelocity.distance}</td>
-                <td>${bestVelocity.duration}</td>
-                <td>${((bestVelocity.distance/1000)/(bestVelocity.duration/60)).toFixed(2)}</td>
-                <td>${new Date(bestVelocity.date).toLocaleString()}</td>
-            </tr>
-        </tbody>
-    </table>
-`
+    const tiempoBest = document.getElementById("tiempoBest");
+    let bestTimed = loggedUser.entrenamientos.reduce((max, value, index) => {
+        if (value.duration > max.duration) {
+            return {...value, id: index};
+        }
+        return max;
+    }, { duration: 0 }); 
+    tiempoBest.innerHTML = `
+    <p>#${(bestTimed.id + 1)}. Where you have run for ${bestTimed.duration} minutes!</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Distance (m)</th>
+                    <th>Duration (min)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${bestTimed.id + 1}</td>
+                    <td>${bestTimed.distance}</td>
+                    <td>${bestTimed.duration}</td>
+                    <td>${new Date(bestTimed.date).toLocaleString()}</td>
+                </tr>
+            </tbody>
+        </table>
+    `
+
+    //mejor distancia
+    const distanciaBest = document.getElementById("distanciaBest");
+    let bestDistanced = loggedUser.entrenamientos.reduce((max, value, index) => {
+        if (value.distance > max.distance) {
+            return {...value, id: index};
+        }
+        return max;
+    }, { distance: 0 }); 
+    distanciaBest.innerHTML = `
+    <p>#${(bestDistanced.id + 1)}. Where you have run for ${bestDistanced.distance} meters!</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Distance (m)</th>
+                    <th>Duration (min)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${bestDistanced.id + 1}</td>
+                    <td>${bestDistanced.distance}</td>
+                    <td>${bestDistanced.duration}</td>
+                    <td>${new Date(bestDistanced.date).toLocaleString()}</td>
+                </tr>
+            </tbody>
+        </table>
+    `
+
+    //mejor velocidad
+    const velocidadBest = document.getElementById("velocidadBest");
+    let bestVelocity = loggedUser.entrenamientos.reduce((max, value, index) => {
+        if ((value.distance/value.duration) > (max.distance/max.duration)) {
+            return {...value, id: index};
+        }
+        return max;
+    }); 
+    velocidadBest.innerHTML = `
+    <p>#${(bestVelocity.id + 1)}. Where you have run for ${bestVelocity.distance} meters in ${bestVelocity.duration} minutes; a velocity of ${((bestVelocity.distance/1000)/(bestVelocity.duration/60)).toFixed(2)}km/h!</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Distance (m)</th>
+                    <th>Duration (min)</th>
+                    <th>Velocity (km/h)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${bestVelocity.id + 1}</td>
+                    <td>${bestVelocity.distance}</td>
+                    <td>${bestVelocity.duration}</td>
+                    <td>${((bestVelocity.distance/1000)/(bestVelocity.duration/60)).toFixed(2)}</td>
+                    <td>${new Date(bestVelocity.date).toLocaleString()}</td>
+                </tr>
+            </tbody>
+        </table>
+    `
+
+    const summaryText = document.getElementById("summaryText");
+    renderTrainings()
+    let sumDistance = loggedUser.entrenamientos.reduce((sum, num) => sum + Number(num.distance), 0);
+    let sumDuration = loggedUser.entrenamientos.reduce((sum, num) => sum + Number(num.duration), 0);
+    let kachow = ((sumDistance/1000)/(sumDuration/60)).toFixed(2)
+    summaryText.innerHTML = `
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Total Distance (m)</th>
+                    <th>Total Duration (min)</th>
+                    <th>Average Velocity (km/h)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${sumDistance}</td>
+                    <td>${sumDuration}</td>
+                    <td>${kachow}</td>
+                </tr>
+            </tbody>
+        </table>`
+
+}
