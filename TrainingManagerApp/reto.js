@@ -28,16 +28,26 @@ class Entrenamiento {
     };
 }
 
+//function to first define all hidden sections
+function initializePage() {
+    const sections = document.querySelectorAll('.section, .section2, .section3');
+    sections.forEach(section => section.classList.add('hidden'));
+
+    document.getElementById('inicio').classList.remove('hidden');
+
+
+    const isLoggedIn = localStorage.getItem('currentUser');
+    if (isLoggedIn) {
+        document.getElementById('loggedMenu').classList.remove('hidden');
+    };
+};
+
 //section hide main menu
-function showSections(sectionId){
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.add('hidden');
-    });
+function showSections(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.add('hidden'));
     document.getElementById(sectionId).classList.remove('hidden');
 }
-window.onload = () => {
-    showSections('inicio');
-};
 
 //signup form
 const form = document.getElementById("form");
@@ -170,38 +180,40 @@ loginForm.addEventListener("submit", function(event) {
 
 
 //forum section
-//inicializar la zona de comentarios
-function initializeForum(){
-    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    renderForumPosts(storedPosts);
-};
+//inicializar la zona de comentarios si no tiene datos;
+//if (!localStorage.getItem('forumPosts')) {
+//    localStorage.setItem('forumPosts', JSON.stringify([]));
+//};
+
+const forumPosts = JSON.parse(localStorage.getItem('forumPosts')) || [];
+renderForumPosts('postList', forumPosts);
 
 //traer los comentarios guardados en localStorage
-function renderForumPosts(comments){
-    const postList = document.getElementById("postList");
-    postList.innerHTML = "";
-
-    if (comments.length > 0){
-        comments.forEach(comment => {
-            const li = document.createElement("li");
-            li.innerHTML = `
-                <p><b>${comment.user}</b> - ${new Date(comment.date).toLocaleString()}:</p>
-                <p>${comment.text}</p>
-            `;
-            postList.appendChild(li);
-        });
-    } else {
-        postList.innerHTML = `<p>No comments yet!</p>`
-    };
+function getForumPosts() {
+    return JSON.parse(localStorage.getItem('forumPosts'));
+};
+//y guardarlos
+function saveForumPosts(posts) {
+    localStorage.setItem('forumPosts', JSON.stringify(posts));
 };
 
-const forumForm = document.getElementById("forumForm");
-forumForm.addEventListener("submit", function(event) {
-    event.preventDefault();
+//renderizar los comentarios
+function renderForumPosts(id, posts) {
+    const container = document.getElementById(id);
+    container.innerHTML = '';
+    posts.forEach(post => {
+        const postElement = document.createElement("li");
+        postElement.innerHTML = `
+            <p><b>${post.user}</b> - ${new Date(post.date).toLocaleString()}:</p>
+            <p>${post.text}</p>
+        `
+        container.appendChild(postElement);
+    });
+};
 
-    const posts = document.getElementById("posts");
-    const text = posts.value.trim();
-
+//añadir post ajustando el user
+function addPost(text) {
+    const posts = getForumPosts();
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser")) || {user: "unknown"};
     const newPost = {
         user: loggedUser.user,
@@ -209,13 +221,35 @@ forumForm.addEventListener("submit", function(event) {
         date: new Date()
     };
 
-    const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-    storedPosts.push(newPost);
-    localStorage.setItem("posts", JSON.stringify(storedPosts));
+    posts.push(newPost);
+    saveForumPosts(posts);
+    return posts;
+};
 
-    posts.value = "";
-    renderForumPosts(storedPosts);
-    alert("Post has been succesfully added!");
+document.getElementById('submitMain').addEventListener('click', (event) => {
+    event.preventDefault();
+    renderForumPosts('postList', forumPosts);
+    const input = document.getElementById('postsMain');
+    const text = input.value.trim();
+    if (text) {
+        const posts = addPost(text);
+        renderForumPosts('postList', posts);
+        renderForumPosts('postListSignedIn', posts);
+        input.value = '';
+    };
+});
+
+document.getElementById('submitSignedIn').addEventListener('click', (event) => {
+    event.preventDefault();
+    renderForumPosts('postList', forumPosts);
+    const input = document.getElementById('postsSignedIn');
+    const text = input.value.trim();
+    if (text) {
+        const posts = addPost(text);
+        renderForumPosts('postList', posts);
+        renderForumPosts('postListSignedIn', posts);
+        input.value = '';
+    };
 });
 
 
@@ -246,8 +280,8 @@ function logout() {
 
 //if loggedUser is saved within localStorage, after refreshing, keep the session
 window.onload = () => {
-    initializeForum();
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    document.addEventListener('DOMContentLoaded', initializePage);
 
     if (loggedUser) {
         document.getElementById("options").classList.add("hidden");
@@ -255,6 +289,7 @@ window.onload = () => {
         showSections("loggedMenu");
         renderTrainings();
         renderBestTrainings();
+        renderForumPosts('postList', forumPosts);
         //update localStorage when reloading the page
         document.addEventListener("DOMContentLoaded", () => {
             const currentUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -579,7 +614,7 @@ function renderBestTrainings(){
     } else {
         deletionList.innerHTML = `<tr><td colspan="5">No trainings registered!</td></tr>`;
     };
-}
+};
 
 //function to delete trainings
 function deleteTraining(id) {
@@ -588,4 +623,4 @@ function deleteTraining(id) {
     localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
     alert(`Training ${id + 1} deleted succesfully!`);
     renderBestTrainings();
-}
+};
