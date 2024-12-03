@@ -35,11 +35,12 @@ function initializePage() {
 
     document.getElementById('inicio').classList.remove('hidden');
 
-
-    const isLoggedIn = localStorage.getItem('currentUser');
-    if (isLoggedIn) {
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser'));
+    if (loggedUser) {
         document.getElementById('loggedMenu').classList.remove('hidden');
     };
+    renderForumPosts('postList');
+    renderForumPosts('postListSignedIn');
 };
 
 //section hide main menu
@@ -47,7 +48,7 @@ function showSections(sectionId) {
     const sections = document.querySelectorAll('.section');
     sections.forEach(section => section.classList.add('hidden'));
     document.getElementById(sectionId).classList.remove('hidden');
-}
+};
 
 //signup form
 const form = document.getElementById("form");
@@ -178,19 +179,9 @@ loginForm.addEventListener("submit", function(event) {
     }
 });
 
-
-//forum section
-//inicializar la zona de comentarios si no tiene datos;
-//if (!localStorage.getItem('forumPosts')) {
-//    localStorage.setItem('forumPosts', JSON.stringify([]));
-//};
-
-const forumPosts = JSON.parse(localStorage.getItem('forumPosts')) || [];
-renderForumPosts('postList', forumPosts);
-
 //traer los comentarios guardados en localStorage
 function getForumPosts() {
-    return JSON.parse(localStorage.getItem('forumPosts'));
+    return JSON.parse(localStorage.getItem('forumPosts')) || [];
 };
 //y guardarlos
 function saveForumPosts(posts) {
@@ -198,7 +189,8 @@ function saveForumPosts(posts) {
 };
 
 //renderizar los comentarios
-function renderForumPosts(id, posts) {
+function renderForumPosts(id) {
+    const posts = JSON.parse(localStorage.getItem('forumPosts')) || [];
     const container = document.getElementById(id);
     container.innerHTML = '';
     posts.forEach(post => {
@@ -206,10 +198,10 @@ function renderForumPosts(id, posts) {
         postElement.innerHTML = `
             <p><b>${post.user}</b> - ${new Date(post.date).toLocaleString()}:</p>
             <p>${post.text}</p>
-        `
+        `;
         container.appendChild(postElement);
     });
-};
+}
 
 //añadir post ajustando el user
 function addPost(text) {
@@ -228,30 +220,27 @@ function addPost(text) {
 
 document.getElementById('submitMain').addEventListener('click', (event) => {
     event.preventDefault();
-    renderForumPosts('postList', forumPosts);
     const input = document.getElementById('postsMain');
     const text = input.value.trim();
     if (text) {
         const posts = addPost(text);
-        renderForumPosts('postList', posts);
-        renderForumPosts('postListSignedIn', posts);
+        renderForumPosts('postList');
+        renderForumPosts('postListSignedIn');
         input.value = '';
-    };
+    }
 });
 
 document.getElementById('submitSignedIn').addEventListener('click', (event) => {
     event.preventDefault();
-    renderForumPosts('postList', forumPosts);
     const input = document.getElementById('postsSignedIn');
     const text = input.value.trim();
     if (text) {
         const posts = addPost(text);
-        renderForumPosts('postList', posts);
-        renderForumPosts('postListSignedIn', posts);
+        renderForumPosts('postList');
+        renderForumPosts('postListSignedIn');
         input.value = '';
-    };
+    }
 });
-
 
 //section hide menu once logged
 function showSections2(sectionId){
@@ -281,7 +270,11 @@ function logout() {
 //if loggedUser is saved within localStorage, after refreshing, keep the session
 window.onload = () => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-    document.addEventListener('DOMContentLoaded', initializePage);
+    document.addEventListener('DOMContentLoaded', () => {
+        initializePage();
+    });
+    renderForumPosts('postList');
+    renderForumPosts('postListSignedIn');
 
     if (loggedUser) {
         document.getElementById("options").classList.add("hidden");
@@ -289,7 +282,6 @@ window.onload = () => {
         showSections("loggedMenu");
         renderTrainings();
         renderBestTrainings();
-        renderForumPosts('postList', forumPosts);
         //update localStorage when reloading the page
         document.addEventListener("DOMContentLoaded", () => {
             const currentUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -624,3 +616,4 @@ function deleteTraining(id) {
     alert(`Training ${id + 1} deleted succesfully!`);
     renderBestTrainings();
 };
+
