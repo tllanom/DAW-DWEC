@@ -582,7 +582,7 @@ function renderBestTrainings(){
         </table>
     `
 
-//delete training section
+    //delete training section
     const trainings = loggedUser.entrenamientos;
     const deletionList = document.getElementById("deletion-list");
 
@@ -613,7 +613,8 @@ function deleteTraining(id) {
     const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
     loggedUser.entrenamientos.splice(id, 1);
     localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
+    saveLoggedUser()
     alert(`Training ${id + 1} deleted succesfully!`);
+    renderTrainings();
     renderBestTrainings();
 };
-
