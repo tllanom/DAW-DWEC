@@ -34,11 +34,9 @@ function initializePage() {
     sections.forEach(section => section.classList.add('hidden'));
 
     document.getElementById('inicio').classList.remove('hidden');
-
+    document.getElementById('loggedMenu').classList.add('hidden');
+    
     const loggedUser = JSON.parse(localStorage.getItem('loggedUser'));
-    if (loggedUser) {
-        document.getElementById('loggedMenu').classList.remove('hidden');
-    };
     renderForumPosts('postList');
     renderForumPosts('postListSignedIn');
 };
@@ -170,10 +168,10 @@ loginForm.addEventListener("submit", function(event) {
         localStorage.setItem("loggedUser", JSON.stringify(existingUser));
         document.getElementById("loginForm").reset();
 
+        showSections("loggedMenu")
         document.getElementById("options").classList.add("hidden");
         document.getElementById("loggedMenu").classList.remove("hidden");
 
-        showSections("loggedMenu");
         renderTrainings();
         renderBestTrainings();
     }
@@ -213,7 +211,7 @@ function addPost(text) {
         date: new Date()
     };
 
-    posts.push(newPost);
+    posts.unshift(newPost); //unshift for latest post up top, .push for the other way around; i find it easier like this
     saveForumPosts(posts);
     return posts;
 };
